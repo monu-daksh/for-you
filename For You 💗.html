@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>For You 💗</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#ffd1e3;--bg2:#ff9ec4;--card:#fffafc;--ink:#7a1f4b;--accent:#e6336f;--accent2:#ff6b9d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#3a0f26;--bg2:#6b1d45;--card:#fff0f6;--ink:#7a1f4b}}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:linear-gradient(160deg,var(--bg1),var(--bg2));color:var(--ink);overflow:hidden;display:flex;align-items:center;justify-content:center;padding:16px}
+.script{font-family:"Dancing Script","Segoe Script","Brush Script MT",cursive}
+.card{position:relative;z-index:5;width:100%;max-width:380px;background:var(--card);border-radius:28px;padding:32px 24px 36px;text-align:center;box-shadow:0 20px 60px rgba(150,20,80,.35);animation:pop .6s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.big{font-size:64px;line-height:1;animation:beat 1.2s infinite}
+@keyframes beat{0%,100%{transform:scale(1)}30%{transform:scale(1.18)}60%{transform:scale(.97)}}
+h1{font-size:clamp(28px,8vw,38px);margin:12px 0 4px}
+p{margin:6px 0}
+.btns{display:flex;gap:16px;justify-content:center;margin-top:26px;min-height:54px}
+button{font:inherit;font-size:18px;font-weight:700;border:0;border-radius:999px;padding:14px 34px;cursor:pointer;color:#fff;touch-action:manipulation}
+#yes{background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 8px 20px rgba(230,51,111,.4)}
+#yes:active{transform:scale(.95)}
+#no{background:#b89aa9;transition:left .55s cubic-bezier(.22,1,.36,1),top .55s cubic-bezier(.22,1,.36,1)}
+.heart{position:fixed;bottom:-60px;z-index:1;pointer-events:none;animation:rise linear forwards;user-select:none}
+@keyframes rise{to{transform:translateY(-115vh) rotate(25deg);opacity:0}}
+#final{display:none}
+.sign{margin-top:18px;font-size:26px}
+.names{display:none}
+</style>
+</head>
+<body>
+<div class="card" id="ask">
+  <div class="big">💗</div>
+  <h1 class="script">Would u miss me at Karnal?</h1>
+  <p>Be honest&hellip; 🥺</p>
+  <div class="btns">
+    <button id="yes">Yes 💕</button>
+    <button id="no">No</button>
+  </div>
+</div>
+
+<div class="card" id="final">
+  <div class="big">🪔</div>
+  <h1 class="script">Happy Diwali 🪔</h1>
+  <p style="font-size:19px">and a <b>Happy, Safe January</b> ✨</p>
+  <p>Wherever you go, a little piece of my heart goes with you. Stay safe, stay smiling, and come back soon. We'll be right here waiting, <span id="to"></span> 💕</p>
+  <p class="sign script">You stay with Arman &amp; Coco, forever and ever 💖🐾</p>
+  <p class="names" id="from"></p>
+</div>
+
+<script>
+// Edit names here
+var TO = "Safe";
+var FROM = "Arman & Coco 🐾";
+document.getElementById('to').textContent = TO;
+document.getElementById('from').textContent = "— " + FROM;
+
+var emojis = ["❤️","💖","💕","💗","💘","🌸","✨"];
+function heart(){
+  var h = document.createElement('span');
+  h.className = 'heart';
+  h.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+  h.style.left = Math.random()*100 + 'vw';
+  h.style.fontSize = (16 + Math.random()*30) + 'px';
+  h.style.animationDuration = (4 + Math.random()*4) + 's';
+  document.body.appendChild(h);
+  setTimeout(function(){h.remove()}, 8500);
+}
+var ambient = setInterval(heart, 900);
+
+var no = document.getElementById('no');
+function dodge(e){
+  if(e){e.preventDefault();}
+  var w = no.offsetWidth, h = no.offsetHeight, m = 12;
+  var maxX = window.innerWidth - w - m, maxY = window.innerHeight - h - m;
+  var x, y, tries = 0;
+  var yr = document.getElementById('yes').getBoundingClientRect();
+  do {
+    x = m + Math.random()*Math.max(0,maxX-m);
+    y = m + Math.random()*Math.max(0,maxY-m);
+    tries++;
+  } while(tries < 20 && x < yr.right+10 && x+w > yr.left-10 && y < yr.bottom+10 && y+h > yr.top-10);
+  if(no.style.position !== 'fixed'){
+    var r = no.getBoundingClientRect();
+    var ph = document.createElement('span');
+    ph.style.width = r.width + 'px';
+    no.parentNode.insertBefore(ph, no);
+    no.style.transition = 'none';
+    no.style.position = 'fixed';
+    no.style.left = r.left + 'px';
+    no.style.top = r.top + 'px';
+    no.style.zIndex = 10;
+    void no.offsetWidth;
+    no.style.transition = '';
+  }
+  no.style.left = x + 'px';
+  no.style.top = y + 'px';
+}
+no.addEventListener('mouseenter', dodge);
+no.addEventListener('pointerdown', dodge);
+no.addEventListener('touchstart', dodge, {passive:false});
+no.addEventListener('click', dodge);
+
+document.getElementById('yes').addEventListener('click', function(){
+  document.getElementById('ask').style.display = 'none';
+  no.style.display = 'none';
+  clearInterval(ambient);
+  var n = 0;
+  var burst = setInterval(function(){
+    heart(); heart();
+    if(++n > 60){clearInterval(burst); ambient = setInterval(heart, 350);}
+  }, 70);
+  setTimeout(function(){
+    document.getElementById('final').style.display = 'block';
+  }, 1800);
+});
+</script>
+</body>
+</html>
